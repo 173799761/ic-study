@@ -57,10 +57,14 @@ dfx.json defaults 增加packtool配置，让dfx知道如何使用veseel程序库
 
 
 查看日志状态
+```bash
 dfx canister call iclogger stats '()'
+```
 
 添加日志记录
+```bash
 dfx canister call iclogger append '(vec{"first entry"})'
+```
 
 # 开发参考资料
 
