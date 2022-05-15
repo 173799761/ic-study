@@ -1,0 +1,18 @@
+// Version: 1.0.0
+type Bucket<A> = List<A>;
+type Buckets<A> = Deque<[A]>;
+type Deque<T> = (List__1<T>, List__1<T>);
+type List<T> = ?(T, List<T>);
+type List__1<T> = List<T>;
+actor {
+  stable var allowed : [Principal];
+  stable var state :
+    {
+      var bucket : Bucket<Text>;
+      bucket_size : Nat;
+      var buckets : Buckets<Text>;
+      var num_of_buckets : Nat;
+      var num_of_lines : Nat;
+      var start_index : Nat
+    }
+};

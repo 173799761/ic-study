@@ -53,6 +53,15 @@ dfx.json defaults 增加packtool配置，让dfx知道如何使用veseel程序库
   }
 ```
 
+通过 import Logger "mo:ic-logger/Logger"；实现ic-logger的引入
+
+
+查看日志状态
+dfx canister call iclogger stats '()'
+
+添加日志记录
+dfx canister call iclogger append '(vec{"first entry"})'
+
 # 开发参考资料
 
 如果您想了解更多的开发资料，请参阅以下在线文档:
