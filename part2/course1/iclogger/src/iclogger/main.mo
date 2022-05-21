@@ -15,47 +15,49 @@ import Text "mo:base/Text";
 import Types "types";
 shared(msg) actor class Main() {
 
-  type ActorIcLogger = ActorIcLoggers.ActorIcLogger;
-  stable var canisterIdx : Nat = 0;//canister索引,当满100条记录后增1
+  //当前的Log Canister对象
+  private var curLogCanister : ?ActorIcLoggers.ActorIcLogger = null;
 
-
-  let eq: (Nat, Nat) -> Bool = func(x, y) { x == y };
-  var cMaps: Map.HashMap<Nat, ActorIcLoggers.ActorIcLogger> = Map.HashMap<Nat, ActorIcLoggers.ActorIcLogger>(0, eq, Hash.hash);
-
-
-   func _getCurLogger() : async ActorIcLoggers.ActorIcLogger{
-        switch (cMaps.get(canisterIdx)) {
-            case null { 
-                 canisterIdx += 1;
-                 var x = await ActorIcLoggers.ActorIcLogger(canisterIdx);
-                 cMaps.put(canisterIdx,x);
-                 x;
-                //return x;
-            };
-            case _{
-                var y = cMaps.get(canisterIdx);
-                if(y.size > 100){
-                  canisterIdx += 1;
-                  var x = await ActorIcLoggers.ActorIcLogger(canisterIdx);
-                  cMaps.put(canisterIdx,x);
-                  x;
-                }else{
-                  y;
-                }
-            };
+ //获取当前的 Log Canister 对象，当日志满100行时候,自动创建新的Log Canister
+  private func getCurLogCanister() : async ActorIcLoggers.ActorIcLogger{
+    switch(curLogCanister) {
+      case null { 
+        let logCanister : ActorIcLoggers.ActorIcLogger = await ActorIcLoggers.ActorIcLogger();
+        curLogCanister :=  ?logCanister;
+        logCanister;
+      };
+      case (?logCanister) {
+        // 需要判断当前Logger 的 canister 是否达到最大值，达到最大值时，需要新创建
+        let size = await logCanister.logSize();
+        if(size >= 100) {
+          let newLogger : ActorIcLoggers.ActorIcLogger = await ActorIcLoggers.ActorIcLogger();
+          curLogCanister :=  ?newLogger;
+          newLogger;
+        } else {
+          logCanister;
         };
+      };
+    };
   };
 
-  //新增日志
+  // Add a set of messages to the log.
   public shared (msg) func append(msgs: [Text]) {
-    var x : ActorIcLogger =  await _getCurLogger();
-    x.append(msgs);
+    var logger : ActorIcLoggers.ActorIcLogger = await getCurrentLogger();
+    logger.append(msgs);
   };
 
-  //查看状态
+  // Return log stats, where:
+  //   start_index is the first index of log message.
+  //   bucket_sizes is the size of all buckets, from oldest to newest.
   public query func stats() : async Logger.Stats {
-    var x : ActorIcLogger =  await _getCurLogger();
-    x.stats();
+    var logger : ActorIcLoggers.ActorIcLogger = await getCurrentLogger();
+    logger.stats()
+  };
+
+  // Return the messages between from and to indice (inclusive).
+  public shared query (msg) func view(from: Nat, to: Nat) : async Logger.View<Text> {
+    var logger : ActorIcLoggers.ActorIcLogger = await getCurrentLogger();
+    logger.view(from, to)
   };
 
 

@@ -1,24 +1,11 @@
 // Version: 1.0.0
-type ActorIcLogger =
-  actor {
-    append : shared [Text] -> ();
-    getIdx : shared query () -> async Nat;
-    stats : shared query () -> async Stats;
-    view : shared query (Nat, Nat) -> async View<Text>
-  };
-type ActorIcLogger__1 = ActorIcLogger;
-type ActorIcLogger__2 = ActorIcLogger__1;
 type Bucket<A> = List<A>;
 type Buckets<A> = Deque<[A]>;
 type Deque<T> = (List__1<T>, List__1<T>);
 type List<T> = ?(T, List<T>);
 type List__1<T> = List<T>;
-type Stats = {bucket_sizes : [Nat]; start_index : Nat};
-type View<A> = {messages : [A]; start_index : Nat};
 actor {
   stable var allowed : [Principal];
-  stable var canisterIdx : Nat;
-  stable var canisterList : ?(ActorIcLogger__2, List<ActorIcLogger__2>);
   stable var state :
     {
       var bucket : Bucket<Text>;

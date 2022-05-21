@@ -6,22 +6,16 @@ import Deque "mo:base/Deque";
 import List "mo:base/List";
 import Nat "mo:base/Nat";
 import Option "mo:base/Option";
-
 import Logger "mo:ic-logger/Logger";
 
-actor class ActorIcLogger(n:Nat) {
+actor class ActorIcLogger() {
   
-  let canisterIdx = n;
-
   stable var state : Logger.State<Text> = Logger.new<Text>(0, null);
   let logger = Logger.Logger<Text>(state);
 
 
-
-
   // Add a set of messages to the log.
   public shared (msg) func append(msgs: [Text]) {
-   // assert(Option.isSome(Array.find(allowed, func (id: Principal) : Bool { msg.caller == id })));
     logger.append(msgs);
   };
 
@@ -32,14 +26,19 @@ actor class ActorIcLogger(n:Nat) {
     logger.stats()
   };
 
-  public query func getIdx() : async Nat {
-    canisterIdx
-  };
-
   // Return the messages between from and to indice (inclusive).
   public shared query (msg) func view(from: Nat, to: Nat) : async Logger.View<Text> {
-   // assert(msg.caller == OWNER);
     logger.view(from, to)
+  };
+
+    //查询日志条数
+  public shared query (msg) func logSize() : async Nat {
+     let stats : Logger.Stats = logger.stats();
+     var counts = 0;
+     for (size in Iter.fromArray(stats.bucket_sizes)) {
+        counts := counts + size;
+     };
+     counts;
   };
 
 
