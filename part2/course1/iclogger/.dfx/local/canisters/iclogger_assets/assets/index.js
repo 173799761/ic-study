@@ -17717,11 +17717,9 @@ const idlFactory = ({ IDL }) => {
     'start_index' : IDL.Nat,
   });
   const Main = IDL.Service({
-    'allow' : IDL.Func([IDL.Vec(IDL.Principal)], [], ['oneway']),
     'append' : IDL.Func([IDL.Vec(IDL.Text)], [], ['oneway']),
-    'pop_buckets' : IDL.Func([IDL.Nat], [], ['oneway']),
-    'stats' : IDL.Func([], [Stats], ['query']),
-    'view' : IDL.Func([IDL.Nat, IDL.Nat], [View], ['query']),
+    'stats' : IDL.Func([], [Stats], []),
+    'view' : IDL.Func([IDL.Nat, IDL.Nat], [View], []),
   });
   return Main;
 };

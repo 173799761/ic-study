@@ -10,10 +10,8 @@ type Stats =
  };
 type Main = 
  service {
-   allow: (vec principal) -> () oneway;
    append: (vec text) -> () oneway;
-   pop_buckets: (nat) -> () oneway;
-   stats: () -> (Stats) query;
-   view: (nat, nat) -> (View) query;
+   stats: () -> (Stats);
+   view: (nat, nat) -> (View);
  };
 service : () -> Main

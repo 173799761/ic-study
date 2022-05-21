@@ -7,6 +7,7 @@ import List "mo:base/List";
 import Nat "mo:base/Nat";
 import Option "mo:base/Option";
 import Logger "mo:ic-logger/Logger";
+import Iter "mo:base/Iter";
 
 actor class ActorIcLogger() {
   
