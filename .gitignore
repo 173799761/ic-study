@@ -181,3 +181,6 @@ part2/course1/iclogger/.dfx/state/replicated_state/subnet_record_jrbj7-4mj6u-cie
 part2/course1/iclogger/.dfx/state/replicated_state/subnet_record_y3ndf-x5nhb-hodsb-4a22j-owqdu-ukks6-uzfas-legqf-gsumv-irx2t-pqe.pb
 *.log
 *.pbuf
+*.pb
+*.log
+*.pbuf
