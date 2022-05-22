@@ -66,6 +66,13 @@ dfx canister call iclogger stats '()'
 dfx canister call iclogger append '(vec{"first entry"})'
 ```
 
+查看日志命令
+```bash
+dfx canister call iclogger view '(0,100)'
+```
+# 测试结果
+test_result.jpg
+
 # 开发参考资料
 
 如果您想了解更多的开发资料，请参阅以下在线文档:
