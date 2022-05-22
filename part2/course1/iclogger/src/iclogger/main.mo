@@ -1,5 +1,4 @@
-// Persistent logger keeping track of what is going on.
-
+// 79号学员 郭梁
 import Array "mo:base/Array";
 import Buffer "mo:base/Buffer";
 import Deque "mo:base/Deque";
@@ -18,19 +17,28 @@ shared(msg) actor class Main() {
   //当前的Log Canister对象
   private var curLogCanister : ?ActorIcLoggers.ActorIcLogger = null;
 
+  var canisterIdx : Nat = 0;//canister索引,当满100条记录后增1
+  let eq: (Nat, Nat) -> Bool = func(x, y) { x == y };
+  var cMaps: Map.HashMap<Nat, ActorIcLoggers.ActorIcLogger> = Map.HashMap<Nat, ActorIcLoggers.ActorIcLogger>(0, eq, Hash.hash);
+
  //获取当前的 Log Canister 对象，当日志满100行时候,自动创建新的Log Canister
   private func getCurLogCanister() : async ActorIcLoggers.ActorIcLogger{
     switch(curLogCanister) {
       case null { 
         let logCanister : ActorIcLoggers.ActorIcLogger = await ActorIcLoggers.ActorIcLogger();
+        cMaps.put(canisterIdx,logCanister);
+        canisterIdx := 1;
         curLogCanister :=  ?logCanister;
         logCanister;
+        
       };
       case (?logCanister) {
         // 需要判断当前Logger 的 canister 是否达到最大值，达到最大值时，需要新创建
         let size = await logCanister.logSize();
         if(size >= 100) {
           let newLogger : ActorIcLoggers.ActorIcLogger = await ActorIcLoggers.ActorIcLogger();
+          cMaps.put(canisterIdx,newLogger);
+          canisterIdx := 1;
           curLogCanister :=  ?newLogger;
           newLogger;
         } else {
@@ -56,8 +64,22 @@ shared(msg) actor class Main() {
 
   // Return the messages between from and to indice (inclusive).
   public shared  (msg) func view(from: Nat, to: Nat) : async Logger.View<Text> {
-    var logger : ActorIcLoggers.ActorIcLogger = await getCurLogCanister();
-    await logger.view(from, to)
+    var idx = to % 100;//每个容易最多存100条,所以这里取模100
+    switch (cMaps.get(idx)){
+      case null {
+        //按照Logger里的记录结构返回空值
+        {
+          start_index = 0;
+          messages = [];
+        };
+      };
+      case (?logger) {
+        var idxFrom = from - idx * 100;//按照取模折算出对应容易里的消息记录数组下标
+        var idxTo = to - idx * 100;
+        await logger.view(idxFrom, idxTo);
+      };
+    };
+    
   };
 
 
