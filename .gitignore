@@ -179,3 +179,5 @@ part2/course1/iclogger/.dfx/state/replicated_state/routing_table.pb
 part2/course1/iclogger/.dfx/state/replicated_state/subnet_list.pb
 part2/course1/iclogger/.dfx/state/replicated_state/subnet_record_jrbj7-4mj6u-ciegk-zvist-vlwht-btinr-oa43m-rv4jg-juitm-iikpl-bae.pb
 part2/course1/iclogger/.dfx/state/replicated_state/subnet_record_y3ndf-x5nhb-hodsb-4a22j-owqdu-ukks6-uzfas-legqf-gsumv-irx2t-pqe.pb
+*.log
+*.pbuf
