@@ -184,3 +184,4 @@ part2/course1/iclogger/.dfx/state/replicated_state/subnet_record_y3ndf-x5nhb-hod
 *.pb
 *.log
 *.pbuf
+*.pbuf
