@@ -27,7 +27,7 @@ shared(msg) actor class Main() {
       case null { 
         let logCanister : ActorIcLoggers.ActorIcLogger = await ActorIcLoggers.ActorIcLogger();
         cMaps.put(canisterIdx,logCanister);
-        canisterIdx := 1;
+        canisterIdx := canisterIdx + 1;
         curLogCanister :=  ?logCanister;
         logCanister;
         
@@ -38,7 +38,7 @@ shared(msg) actor class Main() {
         if(size >= 100) {
           let newLogger : ActorIcLoggers.ActorIcLogger = await ActorIcLoggers.ActorIcLogger();
           cMaps.put(canisterIdx,newLogger);
-          canisterIdx := 1;
+          canisterIdx := canisterIdx + 1;
           curLogCanister :=  ?newLogger;
           newLogger;
         } else {
