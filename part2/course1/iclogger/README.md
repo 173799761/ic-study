@@ -1,4 +1,4 @@
-## iclogger 实现一个可以无限扩容的 Logger，支持添加文本记录，不支持删除
+## iclogger 实现一个可以无限扩容的 Logger，支持添加文本记录，不支持删除 :smiley:
 总体方案思路:
 * 1、通过创建更多的Logger来实现，通过实现一个Logger canister,它的公共接口和ic-logger里演示的公共接口是一样的
 * 2、当内部发现自己的日志记录数量达到了100条后，创建一个新的Logger canister容器,即产生一个新的actor
