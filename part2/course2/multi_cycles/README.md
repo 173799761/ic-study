@@ -72,6 +72,12 @@ sudo mv ic-repl-macos /Usrs/mofeng/bin/ic-repl
  dfx canister install hello_cycles --mode reinstall
 ```
 
+ * 利用ic-repl脚本语言做测试 
+```bash
+./test.sh
+```
+
+
  * 常用命令
  创建钱包
 ```bash
