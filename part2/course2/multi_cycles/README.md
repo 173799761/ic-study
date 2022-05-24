@@ -81,7 +81,7 @@ dfx canister call hello_cycles wallet_balance '()'
  * 部署后更新 canister ID
 将 .dfx/local/canister_ids.json 的 multi_cycles 对应的 principal 更新至 ./test.sh 文件对应位置
 ```bash
-import dynamic_canister = "${WALLET_ID:-rrkah-fqaaa-aaaaa-aaaaq-cai}" as "src/declarations/multi_cycles/multi_cycles.did";
+import canister = "${WALLET_ID:-rrkah-fqaaa-aaaaa-aaaaq-cai}" as "src/declarations/multi_cycles/multi_cycles.did";
 ```
 
  * 动态创建和管理Canister：create_canister、install_code、canister_status、start_canister、 stop_canister、 delete_canister 方法 执行以下脚本
