@@ -1,6 +1,6 @@
-#!/usr/local/bin/ic-repl
-function deploy(multi_cycles_canister,wasm) {
-  let id = call multi_cycles_canister.create_canister(
+#!/Users/mofeng/bin/ic-repl
+function deploy(multi_cycles,wasm) {
+  let id = call multi_cycles.create_canister(
     record {
       maintainers = 1;
       controllers = null;
@@ -9,7 +9,7 @@ function deploy(multi_cycles_canister,wasm) {
     }
   );
   
-  call multi_cycles_canister.install_code(
+  call multi_cycles.install_code(
     record {
       canister_id = id;
       mode = variant { install };
@@ -20,4 +20,8 @@ function deploy(multi_cycles_canister,wasm) {
 };
 
 identity alice;
-
+import multi_cycles = "rrkah-fqaaa-aaaaa-aaaaq-cai";
+let id = deploy(multi_cycles,file "hello_cycles.wasm");
+let canister = id.canister_id;
+call canister.wallet_balance();
+//call canister.greet("world");

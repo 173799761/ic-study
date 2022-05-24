@@ -2,6 +2,7 @@ import type { Principal } from '@dfinity/principal';
 export interface anon_class_10_1 {
   'create_canister' : () => Promise<canister_id>,
   'delete_canister' : (arg_0: canister_id) => Promise<undefined>,
+  'greet' : (arg_0: string) => Promise<string>,
   'install_code' : (
       arg_0: {
         'mode' : { 'reinstall' : null } |
