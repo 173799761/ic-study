@@ -1,7 +1,7 @@
 
-# 多人 Cycle 钱包，可以用于团队协作，提供类似多签的功能
+# 多人 Cycle 钱包，可以用于团队协作，提供类似多签的功能:smiley:
 
-## 安装 candid 开发工具
+## 安装 candid 开发工具:smiley:
 
  * 下载对应版本 didc-macos
 ```bash
@@ -51,7 +51,7 @@ didc bind -t mo ic.did > src/multi_cycles/ic.mo
 ```bash
 https://github.com/chenyan2002/ic-repl/releases
 ```
-无外部依赖库版本
+无外部依赖库版本 :confused:
 ```bash
 https://github.com/ninegua/ic-nix
 ```
@@ -66,10 +66,15 @@ sudo mv ic-repl-macos /Usrs/mofeng/bin/ic-repl
 ```
 
  * 移动到bin目录
- dfx canister install 生成wasm文件
+ dfx canister install 生成wasm文件 见 test_pic/wasm.jpeg
 在 install的时候会生成wasm文件 路径在这里./../../.dfx/local/canisters/XXX/XXX.wasm
 ```bash
  dfx canister install hello_cycles --mode reinstall
+```
+
+* git clone https://github.com/dfinity/examples/hello_cycles
+```bash
+dfx canister call hello_cycles wallet_balance '()'
 ```
 
  * 利用ic-repl脚本语言做测试 
