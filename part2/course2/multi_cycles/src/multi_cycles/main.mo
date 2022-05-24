@@ -11,7 +11,7 @@ actor class () = self {
   public func create_canister():async IC.canister_id{
     let settings = {
       freezing_threshold = null;
-      controllers = ?[Principal.fromActor(self)];
+      controllers = null;
       memory_allocation = null;
       compute_allocation = null;
     };

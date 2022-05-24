@@ -3,6 +3,7 @@ type canister_id = principal;
 service : {
   create_canister: () -> (canister_id);
   delete_canister: (canister_id) -> ();
+  greet: (text) -> (text);
   install_code:
    (record {
       canister_id: canister_id;
