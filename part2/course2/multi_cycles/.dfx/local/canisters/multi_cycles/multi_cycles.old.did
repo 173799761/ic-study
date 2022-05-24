@@ -1,5 +1,0 @@
-type canister_id = principal;
-service : {
-  create_canister: () -> (canister_id);
-  greet: (text) -> (text);
-}

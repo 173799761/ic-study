@@ -65,6 +65,13 @@ chmod a+x ic-repl-macos
 sudo mv ic-repl-macos /Usrs/mofeng/bin/ic-repl
 ```
 
+ * 移动到bin目录
+ dfx canister install 生成wasm文件
+在 install的时候会生成wasm文件 路径在这里./../../.dfx/local/canisters/XXX/XXX.wasm
+```bash
+ dfx canister install hello_cycles --mode reinstall
+```
+
  * 常用命令
  创建钱包
 ```bash
