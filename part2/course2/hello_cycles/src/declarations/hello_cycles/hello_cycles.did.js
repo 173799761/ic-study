@@ -1,5 +1,6 @@
 export const idlFactory = ({ IDL }) => {
   return IDL.Service({
+    'greet' : IDL.Func([IDL.Text], [IDL.Text], []),
     'transfer' : IDL.Func(
         [IDL.Func([], [], []), IDL.Nat],
         [IDL.Record({ 'refunded' : IDL.Nat })],

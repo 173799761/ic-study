@@ -15,6 +15,9 @@ function deploy(multi_cycles,wasm) {
 identity alice;
 import multi_cycles = "rrkah-fqaaa-aaaaa-aaaaq-cai" as "src/declarations/multi_cycles/multi_cycles.did";
 let canister = deploy(multi_cycles,file "hello_cycles.wasm");
-call canister.wallet_balance();
-//call canister.greet("world");
+call canister.greet("world");
+//call multi_cycles.stop_canister(hello_cycles);
+//call multi_cycles.start_canister(hello_cycles);
+//call multi_cycles.stop_canister(hello_cycles);
+//call multi_cycles.delete_canister(hello_cycles);
 

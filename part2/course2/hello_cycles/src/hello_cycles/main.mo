@@ -23,4 +23,8 @@ actor {
       { refunded = Cycles.refunded() };
   };
 
+  public func greet(name : Text) : async Text {
+    return "Hello, I am hello cycles " # name # "!";
+  };
+
 };

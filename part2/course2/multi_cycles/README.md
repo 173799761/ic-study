@@ -66,7 +66,7 @@ sudo mv ic-repl-macos /Usrs/mofeng/bin/ic-repl
 ```
 
  * 移动到bin目录
- dfx canister install 生成wasm文件 见 test_pic/wasm.jpeg
+ dfx canister install 生成wasm文件 见 `test_pic/wasm.jpeg`
 在 install的时候会生成wasm文件 路径在这里./../../.dfx/local/canisters/XXX/XXX.wasm
 ```bash
  dfx canister install hello_cycles --mode reinstall
@@ -80,8 +80,10 @@ dfx canister call hello_cycles wallet_balance '()'
  * 利用ic-repl脚本语言做测试 
  * 部署后更新 canister ID
 将 .dfx/local/canister_ids.json 的 multi_cycles 对应的 principal 更新至 ./test.sh 文件对应位置
+测试成功截图 `test_pic/ic-repl-install-code-success.jpeg`
 ```bash
-import canister = "${WALLET_ID:-rrkah-fqaaa-aaaaa-aaaaq-cai}" as "src/declarations/multi_cycles/multi_cycles.did";
+// 加`as`的目的让 ic-repl 知道你的 canister 的 candid 接口可能在调用的时候会方便一些
+import multi_cycles = "rrkah-fqaaa-aaaaa-aaaaq-cai" as "src/declarations/multi_cycles/multi_cycles.did";
 ```
 
  * 动态创建和管理Canister：create_canister、install_code、canister_status、start_canister、 stop_canister、 delete_canister 方法 执行以下脚本
