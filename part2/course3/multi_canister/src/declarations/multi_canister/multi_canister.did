@@ -1,0 +1,9 @@
+type anon_class_13_1 = 
+ service {
+   create_canister: () -> (opt principal);
+   greet: (text) -> (text);
+ };
+service : (record {
+             controllers: vec principal;
+             minimum: nat;
+           }) -> anon_class_13_1
