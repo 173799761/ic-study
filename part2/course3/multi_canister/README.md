@@ -56,7 +56,7 @@ dfx identity get-wallet;
 
 * 创建提案
 ```bash
-dfx canister call multi_canister make_proposal '(variant{start},principal "sbzkb-zqaaa-aaaaa-aaaiq-cai",null)'
+dfx canister call multi_canister make_proposal '(variant{start},principal "sgymv-uiaaa-aaaaa-aaaia-cai",null)'
 ```
 
 * 查询提案
