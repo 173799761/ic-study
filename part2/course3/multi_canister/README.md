@@ -68,6 +68,9 @@ dfx canister call multi_canister show_propose '()'
 dfx canister call multi_canister vote_proposal '(1,true)'
 ```
 
+## 调试过程见pic 文件夹截图
+
+
 
 
 
