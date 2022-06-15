@@ -42,7 +42,7 @@ shared(owner) actor class ({minimum : Nat;controllers : [Principal]}) = self {
       };
 
     let ic : IC.Self =  actor("aaaaa-aa");
-    //Cycles.add(1_000_000_000_000);
+    Cycles.add(1_000_000_000_000);
     let create_result  = await ic.create_canister({settings = ? settings});
 
     let canister : Types.CanisterInfo = {
