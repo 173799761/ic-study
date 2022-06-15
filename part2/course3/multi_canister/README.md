@@ -12,7 +12,7 @@
 -解除对某个指定的 canister 限权。
 3.在调用 IC Management Canister 的时候，给出足够的 cycle。
 
-# 生成测试用的 principal id 
+## 生成测试用的 principal id 
 dfx identity --help
 ```bash
 dfx identity new alice   
@@ -37,9 +37,6 @@ dfx deploy multi_canister --argument '(record {minimum=1; controllers=vec {princ
 ```
 
 * 在调用IC Management Canister 进行create canister时候已经以发消息的方式进行了cycles的支付
-```bash
-dfx canister call multi_canister create_canister '()';
-```
 * 创建Canister
 ```bash
 dfx canister call multi_canister create_canister '()';
@@ -50,7 +47,7 @@ dfx canister call multi_canister show_canisters '()'
 ```
 * 获取指定Canister
 ```bash
-dfx canister call multi_canister get_canister '(principal "q3fc5-haaaa-aaaaa-aaahq-cai")' 
+dfx canister call multi_canister get_canister '(principal "sgymv-uiaaa-aaaaa-aaaia-cai")' 
 ```
 * 查询当前principal余额
 ```bash
@@ -59,14 +56,17 @@ dfx identity get-wallet;
 
 * 创建提案
 ```bash
-dfx canister call multi_canister make_proposal '(variant{start},principal "q3fc5-haaaa-aaaaa-aaahq-cai",null)'
+dfx canister call multi_canister make_proposal '(variant{start},principal "sbzkb-zqaaa-aaaaa-aaaiq-cai",null)'
 ```
 
 * 查询提案
 ```bash
 dfx canister call multi_canister show_propose '()'
 ```
-
+* 提案投票
+```bash
+dfx canister call multi_canister vote_proposal '(1,true)'
+```
 
 
 

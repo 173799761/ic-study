@@ -12,6 +12,8 @@ import Map "mo:base/HashMap";
 import Hash "mo:base/Hash";
 import Iter "mo:base/Iter";
 import Nat "mo:base/Nat";
+import Array "mo:base/Array";
+import Option "mo:base/Option";
 
 // minimum: 提案通过最低维护者人数，即后续升级和维护 canister 最低需要多少人同意通过提案才能执行
 // controllers: 控制者清单，控制者清单人数必须大于等于 minimum 数量
@@ -87,6 +89,117 @@ shared(owner) actor class ({minimum : Nat;controllers : [Principal]}) = self {
     proposeMap.put(pid,propose);
   };
 
+  
+  //投票
+  public shared ({caller}) func vote_proposal (proposal_id: Nat, approve: Bool) : async () {
+    //检查权限
+    assert(checkPermissions(caller)); 
+
+    switch(proposeMap.get(proposal_id)) {
+      case null {
+      };
+      case (?proposal) {
+        if (proposal.proposal_completed == false) {
+          var proposal_approvers = proposal.proposal_approvers;
+          var proposal_approve_num = proposal.proposal_approve_num;
+          var proposal_refusers = proposal.proposal_refusers;
+          var proposal_refuse_num = proposal.proposal_refuse_num;
+          if(approve){
+              proposal_approvers := Array.append([caller], proposal_approvers);
+              proposal_approve_num += 1;
+          } else {
+              proposal_refusers := Array.append([caller], proposal_refusers);
+              proposal_refuse_num += 1;
+          };
+          let new_proposal = {
+              proposal_id = proposal.proposal_id;
+              proposal_maker  = proposal.proposal_maker;
+              operation_type = proposal.operation_type;
+              canister_id = proposal.canister_id;
+              wasm_module = proposal.wasm_module;
+              proposal_approve_num = proposal_approve_num;
+              proposal_approvers = proposal_approvers;
+              proposal_refuse_num = proposal_refuse_num;
+              proposal_refusers = proposal_refusers;
+              proposal_completed = false;
+          };
+          proposeMap.put(proposal.proposal_id,new_proposal);  
+          //执行投票
+          if (proposal_approve_num >= minimum and (not proposal.proposal_completed)) {
+              // auto execute proposal
+              await execute_proposal(new_proposal);
+          };
+        }
+      };
+    };
+  };
+
+  //执行投票
+  private func execute_proposal (proposal : Types.Proposal) : async () {
+      switch (proposal.operation_type) {
+            case (#addRestricted) {
+                add_restricted(proposal.canister_id);
+            };
+            case (#removeRestricted) {
+                remove_restricted(proposal.canister_id);
+            };
+            case (#start) {
+                await start_canister(proposal.canister_id);
+            };
+            case (#stop) {
+                await stop_canister(proposal.canister_id);
+            };
+            case (#install) {
+                await install_code(proposal.canister_id, proposal.wasm_module);
+            };
+            case (#delete) {
+                await delete_canister(proposal.canister_id);
+            };
+        };
+
+        let new_proposal = {
+            proposal_id = proposal.proposal_id;
+            proposal_maker  = proposal.proposal_maker;
+            operation_type = proposal.operation_type;
+            canister_id = proposal.canister_id;
+            wasm_module = proposal.wasm_module;
+            proposal_approve_num = proposal.proposal_approve_num;
+            proposal_approvers = proposal.proposal_approvers;
+            proposal_refuse_num = proposal.proposal_refuse_num;
+            proposal_refusers = proposal.proposal_refusers;
+            proposal_completed = true;
+        };
+        proposeMap.put(proposal.proposal_id,new_proposal);
+  };
+
+  private func add_restricted(canister_id : Principal) : () {
+        let new_canister_info : Types.CanisterInfo = {
+            canister_id = canister_id;
+            is_restricted = true;
+        };
+       multiSignatureCanisters.put(canister_id,new_canister_info);
+    };
+
+    private func remove_restricted(canister_id : Principal) : () {
+        let new_canister_info : Types.CanisterInfo = {
+            canister_id = canister_id;
+            is_restricted = false;
+        };
+        multiSignatureCanisters.put(canister_id,new_canister_info);
+    };
+
+
+  //校验该调用者是否有权限
+  private func checkPermissions(caller : Principal) : Bool {
+    //检查 caller 是否在 allControllers 列表中
+    for (x in allControllers.vals()) {
+      if (x == caller) {
+        return true;
+      };
+    };
+    false;
+  };
+
   //查询所有提案
   public shared({ caller }) func show_propose() : async [Types.Proposal] {
     Iter.toArray(proposeMap.vals());
@@ -109,12 +222,12 @@ shared(owner) actor class ({minimum : Nat;controllers : [Principal]}) = self {
   };
 
    //安装/升级 Canister 代码
-  public func install_code({canister_id : IC.canister_id ;mode : { #reinstall; #upgrade; #install }; wasm : IC.wasm_module}) : async () {
+  public func install_code(canister_id : IC.canister_id , wasm : ?Types.Wasm_module) : async () {
     let ic : IC.Self = actor("aaaaa-aa");
     let install = {
       arg = [];
-      wasm_module = wasm;
-      mode = mode;
+      wasm_module = Option.unwrap(wasm);
+      mode = #install;
       canister_id = canister_id;
     };
     await ic.install_code(install);
