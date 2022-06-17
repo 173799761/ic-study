@@ -1,3 +1,62 @@
-service : {
-  greet: (text) -> (text);
-}
+type anon_class_20_1 = 
+ service {
+   create_canister: () -> (opt principal);
+   get_canister: (principal) -> (opt CanisterInfo);
+   greet: (text) -> (text);
+   make_proposal: (OperationType, principal, opt Wasm_module) -> (VoteResult);
+   show_canisters: () -> (vec CanisterInfo);
+   show_controllers: () -> (vec principal);
+   show_propose: () -> (vec Proposal);
+   vote_proposal: (nat, bool) -> (VoteResult);
+ };
+type Wasm_module = vec nat8;
+type VoteSuccess = record {propose: Proposal;};
+type VoteResult = 
+ variant {
+   err: VoteErr;
+   ok: VoteSuccess;
+ };
+type VoteErr = 
+ record {
+   kind:
+    variant {
+      ActionFail;
+      BadProposeID;
+      Expiration;
+      HasBeenExecuted;
+      InvalidController;
+      Other;
+    };
+   message: opt text;
+ };
+type Proposal = 
+ record {
+   canister_id: principal;
+   operation_type: OperationType;
+   proposal_approve_num: nat;
+   proposal_approvers: vec principal;
+   proposal_completed: bool;
+   proposal_id: nat;
+   proposal_maker: principal;
+   proposal_refuse_num: nat;
+   proposal_refusers: vec principal;
+   wasm_module: opt Wasm_module;
+ };
+type OperationType = 
+ variant {
+   addRestricted;
+   delete;
+   install;
+   removeRestricted;
+   start;
+   stop;
+ };
+type CanisterInfo = 
+ record {
+   canister_id: principal;
+   is_restricted: bool;
+ };
+service : (record {
+             controllers: vec principal;
+             minimum: nat;
+           }) -> anon_class_20_1

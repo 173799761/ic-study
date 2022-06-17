@@ -51,4 +51,14 @@ module {
         };
     };
 
+    //执行返回结果
+    public type ActionResult = Result.Result<ActionSuccess, ActionErr>;
+    public type ActionSuccess = {
+        message : ?Text;
+    };
+
+    public type ActionErr = {
+        message : ?Text;
+    };
+
 };
