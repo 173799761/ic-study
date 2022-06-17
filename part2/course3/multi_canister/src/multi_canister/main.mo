@@ -60,6 +60,11 @@ shared(owner) actor class ({minimum : Nat;controllers : [Principal]}) = self {
     Iter.toArray(multiSignatureCanisters.vals());
   };
 
+  public shared func show_controllers() : async [Principal] {
+    Iter.toArray(allControllers.vals());
+  };
+  
+
   //获取Canister
   public shared func get_canister(canister_id : Principal) : async ?Types.CanisterInfo {
     multiSignatureCanisters.get(canister_id);
@@ -91,12 +96,24 @@ shared(owner) actor class ({minimum : Nat;controllers : [Principal]}) = self {
 
   
   //投票
-  public shared ({caller}) func vote_proposal (proposal_id: Nat, approve: Bool) : async () {
+  public shared ({caller}) func vote_proposal (proposal_id: Nat, approve: Bool) : async Types.VoteResult {
     //检查权限
-    assert(checkPermissions(caller)); 
+    //assert(checkPermissions(caller)); 
+    //检查权限
+    if(checkPermissions(caller) == false) {
+      return #err({
+        message = ?"您不是控制者，无法参与投票";
+        kind = #InvalidController;
+      });
+    };
 
     switch(proposeMap.get(proposal_id)) {
       case null {
+        let msg = "该提案号(" # Nat.toText(proposal_id) # ")不存在";
+        #err({
+          message = ?msg;
+          kind = #BadProposeID;
+        });
       };
       case (?proposal) {
         if (proposal.proposal_completed == false) {
@@ -129,6 +146,13 @@ shared(owner) actor class ({minimum : Nat;controllers : [Principal]}) = self {
               // auto execute proposal
               await execute_proposal(new_proposal);
           };
+          #ok({propose=new_proposal});
+        }else{
+            let msg = "该提案号(" # Nat.toText(proposal_id) # ")已被执行，无法进行投票";
+            #err({
+              message = ?msg;
+              kind = #HasBeenExecuted;
+            });
         }
       };
     };

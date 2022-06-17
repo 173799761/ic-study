@@ -1,11 +1,11 @@
 # multi_canister
 ## 在第2课作业的基础上，实现以下的功能：
-用 Actor Class 参数来初始化 M, N, 以及最开始的小组成员（principal id)。（1分）
-允许发起提案，比如对某个被多人钱包管理的 canister 限制权限。（1分）
-统计小组成员对提案的投票（同意或否决），并根据投票结果执行决议。（2分）
-在主网部署，并调试通过。（1 分）
+* 1、用 Actor Class 参数来初始化 M, N, 以及最开始的小组成员（principal id)。（1分）
+* 2、允许发起提案，比如对某个被多人钱包管理的 canister 限制权限。（1分）
+* 3、统计小组成员对提案的投票（同意或否决），并根据投票结果执行决议。（2分） 
+* 4、在主网部署，并调试通过。（1 分）
 本次课程作业先实现基本的提案功能，不涉及具体限权的操作。
-* 要求：
+### 要求：
 1.设计发起提案 (propose) 和对提案进行投票 (vote) 的接口。
 2.实现以下两种提案：
 -开始对某个指定的 canister 限权。
@@ -31,10 +31,13 @@ dfx identity get-principal //zzpvw-spsbb-pcnsc-23gpy-ykq5i-6q27a-j7n7x-nqmp3-fb6
 ```
 
 直接使用第二节课程作业中生成好的ic.mo文件
-dfx deploy 参数
+dfx deploy 参数 即`用 Actor Class 参数来初始化 M, N, 以及最开始的小组成员（principal id)`
 ```bash
 dfx deploy multi_canister --argument '(record {minimum=1; controllers=vec {principal "54dz2-4wkpu-xqyva-45om5-lciwq-kl62c-l7dno-iwcms-pdoea-jj3vb-wqe"; principal "6p25l-itkzz-crd3k-534mc-fq4sj-oz5rl-4cldf-nkaxr-bpasr-2wl4e-lqe"; principal "zzpvw-spsbb-pcnsc-23gpy-ykq5i-6q27a-j7n7x-nqmp3-fb6y2-3eq26-pqe"}})'
 ```
+
+
+
 
 * 在调用IC Management Canister 进行create canister时候已经以发消息的方式进行了cycles的支付
 * 创建Canister
@@ -45,6 +48,11 @@ dfx canister call multi_canister create_canister '()';
 ```bash
 dfx canister call multi_canister show_canisters '()'
 ```
+* 查询小组成员 
+```bash
+dfx canister call multi_canister show_controllers '()'
+```
+
 * 获取指定Canister
 ```bash
 dfx canister call multi_canister get_canister '(principal "sgymv-uiaaa-aaaaa-aaaia-cai")' 
@@ -54,7 +62,7 @@ dfx canister call multi_canister get_canister '(principal "sgymv-uiaaa-aaaaa-aaa
 dfx identity get-wallet;      
 ```
 
-* 创建提案
+* 创建提案 即`允许发起提案，比如对某个被多人钱包管理的 canister 限制权限`
 ```bash
 dfx canister call multi_canister make_proposal '(variant{start},principal "sgymv-uiaaa-aaaaa-aaaia-cai",null)'
 ```
@@ -63,7 +71,7 @@ dfx canister call multi_canister make_proposal '(variant{start},principal "sgymv
 ```bash
 dfx canister call multi_canister show_propose '()'
 ```
-* 提案投票
+* 提案投票 即`统计小组成员对提案的投票（同意或否决），并根据投票结果执行决议`。
 ```bash
 dfx canister call multi_canister vote_proposal '(1,true)'
 ```

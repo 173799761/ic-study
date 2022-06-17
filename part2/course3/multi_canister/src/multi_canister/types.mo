@@ -1,5 +1,5 @@
 import Principal "mo:base/Principal";
-
+import Result "mo:base/Result";
 module {
 
     public type Wasm_module = [Nat8];
@@ -31,6 +31,24 @@ module {
         proposal_refuse_num : Nat;//提案反对的人数
         proposal_refusers: [Principal];//提案反对人的Principal列表
         proposal_completed: Bool;//提案是否已被执行
+    };
+
+        //投票返回结果
+    public type VoteResult = Result.Result<VoteSuccess, VoteErr>;
+    public type VoteSuccess = {
+        propose : Proposal;
+    };
+
+    public type VoteErr = {
+        message : ?Text;
+        kind : {
+        #BadProposeID;
+        #InvalidController;
+        #Expiration;
+        #HasBeenExecuted;
+        #ActionFail;
+        #Other;
+        };
     };
 
 };
