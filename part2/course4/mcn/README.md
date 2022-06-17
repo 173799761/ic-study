@@ -9,6 +9,15 @@
 1.至少实现一种限权操作，比如 install_code，如果额外实现了其它限权操作，适当加分。
 2.在 install_code 的处理过程中，计算 Wasm 的 sha256 值，并作为提案的一部分（这样小组成员才能确认是否要投赞成还是否决）。
 
+## II 和相关依赖安装
+https://github.com/dfinity/agent-js/tree/main/packages
+```bash
+npm i --save @dfinity/auth-client
+npm i --save @dfinity/agent
+npm i --save @dfinity/identity
+npm i --save @dfinity/authentication
+```
+
 ## 生成测试用的 principal id 
 dfx identity --help
 ```bash
