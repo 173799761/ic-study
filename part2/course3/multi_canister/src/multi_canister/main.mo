@@ -76,8 +76,57 @@ shared(owner) actor class ({minimum : Nat;controllers : [Principal]}) = self {
     proposeId;
   };
 
+  //判断canister是否存在
+  private func checkCanisterExist(canister_id : Principal) : Bool {
+    for (x in multiSignatureCanisters.vals()) {
+      if (x == canister_id) {
+        return true;
+      };
+    };
+    false;
+  };
+
+   private func checkRestricted(canister_id : Principal) : Bool{
+    for (x in multiSignatureCanisters.vals()) {
+      if (x == canister_id and x.is_restricted == true) {
+        return true;
+      };
+      if (x == canister_id and x.is_restricted == false) {
+        return false;
+      };
+    };
+    true;
+   };
+
   //生成新的提案
-  public shared ({caller})  func  make_proposal (action: Types.OperationType, canister_id : Principal, wasm: ?Types.Wasm_module) : async () {
+  public shared ({caller})  func  make_proposal (action: Types.OperationType, canister_id : Principal, wasm: ?Types.Wasm_module) : async Types.VoteResult {
+    if(checkCanisterExist(canister_id) == false) {
+        return #err({
+          message = ?"目标罐子不存在";
+          kind = #InvalidController;
+        });
+    };
+
+    switch (action) {
+        case (#addRestricted) { 
+          if(checkRestricted(canister_id) == true){
+              return #err({
+              message = ?"目标罐子已经存在权限限制";
+              kind = #InvalidController;
+            });
+          } 
+          };
+        //3.2 remove Restricted/start stop install delete, check canister restricted
+        case (_) { 
+          if(checkRestricted(canister_id) == false){
+              return #err({
+              message = ?"start stop install delete, check canister 操作需要有权限限制";
+              kind = #InvalidController;
+            });
+          } 
+          };
+    };
+    
     let pid = nextProposeId();
     let propose = {
         proposal_id = pid;//提案唯一标识符
@@ -92,7 +141,10 @@ shared(owner) actor class ({minimum : Nat;controllers : [Principal]}) = self {
         proposal_completed = false;//提案是否已被执行
     };
     proposeMap.put(pid,propose);
+    #ok({propose=propose});
   };
+
+
 
   
   //投票
