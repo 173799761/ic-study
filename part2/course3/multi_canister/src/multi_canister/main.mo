@@ -229,24 +229,24 @@ shared(owner) actor class ({minimum : Nat;controllers : [Principal]}) = self {
     Iter.toArray(proposeMap.vals());
   };
 
-  //以下为之前第二课作业实现的接口
-  public func start_canister(canister_id : IC.canister_id) : async (){
+  //以下为之前第二课作业实现的接口 将公共接口换成了private接口，目的是为了通过投票达成后才能执行
+  private func start_canister(canister_id : IC.canister_id) : async (){
     let ic : IC.Self = actor("aaaaa-aa");
     await ic.start_canister({canister_id = canister_id});
   };
 
-  public func stop_canister(canister_id : IC.canister_id) : async (){
+  private func stop_canister(canister_id : IC.canister_id) : async (){
     let ic : IC.Self = actor("aaaaa-aa");
     await ic.stop_canister({canister_id = canister_id});
   };
 
-  public func delete_canister(canister_id : IC.canister_id) : async (){
+  private func delete_canister(canister_id : IC.canister_id) : async (){
     let ic : IC.Self = actor("aaaaa-aa");
     await ic.delete_canister({canister_id = canister_id});
   };
 
    //安装/升级 Canister 代码
-  public func install_code(canister_id : IC.canister_id , wasm : ?Types.Wasm_module) : async () {
+  private func install_code(canister_id : IC.canister_id , wasm : ?Types.Wasm_module) : async () {
     let ic : IC.Self = actor("aaaaa-aa");
     let install = {
       arg = [];
