@@ -83,7 +83,7 @@ dfx canister call mcn show_propose '()'
 dfx canister call mcn vote_proposal '(1,true)'
 ```
 
-## 调试过程 和限权测试结果 见pic 文件夹截图
+## 客户端UI显示结果见pic 文件夹截图
 
 
 
