@@ -1,4 +1,8 @@
 import type { Principal } from '@dfinity/principal';
+export interface ActionErr { 'message' : [] | [string] }
+export type ActionResult = { 'ok' : ActionSuccess } |
+  { 'err' : ActionErr };
+export interface ActionSuccess { 'message' : [] | [string] }
 export interface CanisterInfo {
   'canister_id' : Principal,
   'is_restricted' : boolean,
@@ -38,6 +42,9 @@ export interface anon_class_20_1 {
   'create_canister' : () => Promise<[] | [Principal]>,
   'get_canister' : (arg_0: Principal) => Promise<[] | [CanisterInfo]>,
   'greet' : (arg_0: string) => Promise<string>,
+  'install_code' : (arg_0: canister_id, arg_1: [] | [Wasm_module]) => Promise<
+      ActionResult
+    >,
   'make_proposal' : (
       arg_0: OperationType,
       arg_1: Principal,
@@ -48,4 +55,5 @@ export interface anon_class_20_1 {
   'show_propose' : () => Promise<Array<Proposal>>,
   'vote_proposal' : (arg_0: bigint, arg_1: boolean) => Promise<VoteResult>,
 }
+export type canister_id = Principal;
 export interface _SERVICE extends anon_class_20_1 {}

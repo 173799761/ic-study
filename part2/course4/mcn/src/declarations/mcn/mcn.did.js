@@ -3,6 +3,11 @@ export const idlFactory = ({ IDL }) => {
     'canister_id' : IDL.Principal,
     'is_restricted' : IDL.Bool,
   });
+  const canister_id = IDL.Principal;
+  const Wasm_module = IDL.Vec(IDL.Nat8);
+  const ActionSuccess = IDL.Record({ 'message' : IDL.Opt(IDL.Text) });
+  const ActionErr = IDL.Record({ 'message' : IDL.Opt(IDL.Text) });
+  const ActionResult = IDL.Variant({ 'ok' : ActionSuccess, 'err' : ActionErr });
   const OperationType = IDL.Variant({
     'addRestricted' : IDL.Null,
     'stop' : IDL.Null,
@@ -11,7 +16,6 @@ export const idlFactory = ({ IDL }) => {
     'start' : IDL.Null,
     'install' : IDL.Null,
   });
-  const Wasm_module = IDL.Vec(IDL.Nat8);
   const Proposal = IDL.Record({
     'wasm_module' : IDL.Opt(Wasm_module),
     'proposal_refusers' : IDL.Vec(IDL.Principal),
@@ -41,6 +45,11 @@ export const idlFactory = ({ IDL }) => {
     'create_canister' : IDL.Func([], [IDL.Opt(IDL.Principal)], []),
     'get_canister' : IDL.Func([IDL.Principal], [IDL.Opt(CanisterInfo)], []),
     'greet' : IDL.Func([IDL.Text], [IDL.Text], []),
+    'install_code' : IDL.Func(
+        [canister_id, IDL.Opt(Wasm_module)],
+        [ActionResult],
+        [],
+      ),
     'make_proposal' : IDL.Func(
         [OperationType, IDL.Principal, IDL.Opt(Wasm_module)],
         [VoteResult],

@@ -1,8 +1,10 @@
+type canister_id = principal;
 type anon_class_20_1 = 
  service {
    create_canister: () -> (opt principal);
    get_canister: (principal) -> (opt CanisterInfo);
    greet: (text) -> (text);
+   install_code: (canister_id, opt Wasm_module) -> (ActionResult);
    make_proposal: (OperationType, principal, opt Wasm_module) -> (VoteResult);
    show_canisters: () -> (vec CanisterInfo);
    show_controllers: () -> (vec principal);
@@ -56,6 +58,13 @@ type CanisterInfo =
    canister_id: principal;
    is_restricted: bool;
  };
+type ActionSuccess = record {message: opt text;};
+type ActionResult = 
+ variant {
+   err: ActionErr;
+   ok: ActionSuccess;
+ };
+type ActionErr = record {message: opt text;};
 service : (record {
              controllers: vec principal;
              minimum: nat;

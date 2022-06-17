@@ -6,17 +6,27 @@
     <title>mcn</title>
     <base href="/" />
     <link rel="icon" href="favicon.ico" />
-    <link type="text/css" rel="stylesheet" href="main.css" />
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
   </head>
   <body>
+    <header><h1>Course 4</h1>
+    </header>
     <main>
-      <img src="logo.png" alt="DFINITY logo" />
-      <form action="#">
-        <label for="name">Enter your name: &nbsp;</label>
-        <input id="name" alt="Name" type="text" />
-        <button type="submit">Click Me!</button>
-      </form>
-      <section id="greeting"></section>
+      <label style="color: red;"> My Principle : </label>
+      <br>
+      <label id="author_name"></label>
+      <label style="color: red;">II url ：</label>
+      <label id="iiUrl"></label>
+      <br>
+      <label style="color: red;" for="message">小组成员名单</label> <button id="show">刷新</button>
+      <div>
+        <section id="message"></section>
+      </div>
+      <label style="color: red;" for="lbl_canister">已经部署的canister列表</label> <button id="showDeployed">刷新</button>
+      <div>
+      <section id="sec_canisters"></section>
+      </div>
+
     </main>
   </body>
 </html>

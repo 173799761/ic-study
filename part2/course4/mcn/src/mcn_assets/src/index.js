@@ -14,57 +14,74 @@ document.body.onload = () => {
   } else {
     iiUrl = `https://${process.env.II_CANISTER_ID}.dfinity.network`;
   }
-  document.getElementById("iiUrl").value = iiUrl;
+  document.getElementById("iiUrl").innerText = iiUrl;
+
+
 };
 
+document.getElementById("show").addEventListener("click", async () => {
+    let message_pos = document.getElementById("message");
+    message_pos.replaceChildren([]);
+    console.log("mcnShowControllers=====")
+    const mcnShowControllers = await mcn.show_controllers();
+    console.log("mcnShowControllers-----", mcnShowControllers)
+    for(let i = 0 ; i < mcnShowControllers.length; i++){
+        let post = document.createElement('post');
+        post.innerText = mcnShowControllers[i];
+        let post2 = document.createElement('post2');
+        post2.innerText = '\n'
+        message_pos.appendChild(post);
+        message_pos.appendChild(post2);
+        // document.getElementById("message").innerText = mcnShowControllers;
+    }  
+})
 
-document.getElementById("loginBtn").addEventListener("click", async () => {
-  // When the user clicks, we start the login process.
-  // First we have to create and AuthClient.
-  const authClient = await AuthClient.create();
+document.getElementById("showDeployed").addEventListener("click", async () => {
+    let message_pos = document.getElementById("sec_canisters");
+    message_pos.replaceChildren([]);
+    console.log("show_canisters=====")
+    const canisters = await mcn.show_canisters();
+    console.log("show_canisters-----", canisters)
+    for(let i = 0 ; i < canisters.length; i++){
+        let post = document.createElement('post');
+        post.innerText = canisters[i].canister_id + ' & '+ canisters[i].is_restricted + '\n';
+        message_pos.appendChild(post);
+        // document.getElementById("message").innerText = mcnShowControllers;
+    }
+})
 
-  // Find out which URL should be used for login.
-  const iiUrl = document.getElementById("iiUrl").value;
 
-  // Call authClient.login(...) to login with Internet Identity. This will open a new tab
-  // with the login prompt. The code has to wait for the login process to complete.
-  // We can either use the callback functions directly or wrap in a promise.
-  await new Promise((resolve, reject) => {
-    authClient.login({
-      identityProvider: iiUrl,
-      onSuccess: resolve,
-      onError: reject,
-    });
-  });
-    // At this point we're authenticated, and we can get the identity from the auth client:
-    const identity = authClient.getIdentity();
-    // Using the identity obtained from the auth client, we can create an agent to interact with the IC.
-    const agent = new HttpAgent({ identity });
-    // Using the interface description of our webapp, we create an actor that we use to call the service methods.
-    const webapp = Actor.createActor(webapp_idl, {
-      agent,
-      canisterId: webapp_id,
-    });
-    // Call whoami which returns the principal (user id) of the current user.
-    const principal = await webapp.whoami();
-    // show the principal on the page
-    document.getElementById("loginStatus").innerText = principal.toText();
-  });
+// document.getElementById("loginBtn").addEventListener("click", async () => {
+//   // When the user clicks, we start the login process.
+//   // First we have to create and AuthClient.
+//   const authClient = await AuthClient.create();
 
-document.querySelector("form").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const button = e.target.querySelector("button");
+//   // Find out which URL should be used for login.
+//   const iiUrl = document.getElementById("iiUrl").value;
 
-  const name = document.getElementById("name").value.toString();
+//   // Call authClient.login(...) to login with Internet Identity. This will open a new tab
+//   // with the login prompt. The code has to wait for the login process to complete.
+//   // We can either use the callback functions directly or wrap in a promise.
+//   await new Promise((resolve, reject) => {
+//     authClient.login({
+//       identityProvider: iiUrl,
+//       onSuccess: resolve,
+//       onError: reject,
+//     });
+//   });
+//     // At this point we're authenticated, and we can get the identity from the auth client:
+//     const identity = authClient.getIdentity();
+//     // Using the identity obtained from the auth client, we can create an agent to interact with the IC.
+//     const agent = new HttpAgent({ identity });
+//     // Using the interface description of our webapp, we create an actor that we use to call the service methods.
+//     const webapp = Actor.createActor(webapp_idl, {
+//       agent,
+//       canisterId: webapp_id,
+//     });
+//     // Call whoami which returns the principal (user id) of the current user.
+//     const principal = await webapp.whoami();
+//     // show the principal on the page
+//     document.getElementById("loginStatus").innerText = principal.toText();
+//   });
 
-  button.setAttribute("disabled", true);
 
-  // Interact with foo actor, calling the greet method
-  const greeting = await mcn.greet(name);
-
-  button.removeAttribute("disabled");
-
-  document.getElementById("greeting").innerText = greeting;
-
-  return false;
-});
