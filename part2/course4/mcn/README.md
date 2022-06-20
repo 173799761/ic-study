@@ -9,6 +9,10 @@
 1.至少实现一种限权操作，比如 install_code，如果额外实现了其它限权操作，适当加分。
 2.在 install_code 的处理过程中，计算 Wasm 的 sha256 值，并作为提案的一部分（这样小组成员才能确认是否要投赞成还是否决）。
 
+## 作业部署的主网地址
+作业已经部署到主网地址如下:
+https://4kia3-jaaaa-aaaam-aamca-cai.ic0.app/
+
 ## II 和相关依赖安装
 https://github.com/dfinity/agent-js/tree/main/packages
 ```bash
