@@ -46,10 +46,11 @@ document.getElementById("show").addEventListener("click", async () => {
 })
 
 document.getElementById("showDeployed").addEventListener("click", async () => {
-    let message_pos = document.getElementById("sec_canisters");
+  try {  
+  let message_pos = document.getElementById("sec_canisters");
     message_pos.replaceChildren([]);
     console.log("show_canisters=====")
-    const canisters = await mcn.show_canisters();
+    const canisters = await mcn_canister.show_canisters();
     console.log("show_canisters-----", canisters)
     for(let i = 0 ; i < canisters.length; i++){
         let post = document.createElement('post');
@@ -57,6 +58,10 @@ document.getElementById("showDeployed").addEventListener("click", async () => {
         message_pos.appendChild(post);
         // document.getElementById("message").innerText = mcnShowControllers;
     }
+  }catch (error) {
+    console.error(error);
+    alert(error) 
+ }
 })
 
 
