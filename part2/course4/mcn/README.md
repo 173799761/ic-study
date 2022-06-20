@@ -18,6 +18,49 @@ npm i --save @dfinity/identity
 npm i --save @dfinity/authentication
 ```
 
+* II登录核心代码
+```bash
+  const authClient = await AuthClient.create();
+  //const iiUrl = document.getElementById("iiUrl").value;
+  const iiUrlTxt = document.getElementById("iiUrl").innerText;
+  console.log("~~~11", iiUrlTxt)
+  authClient.login({
+    identityProvider: null,
+    onSuccess: async()=>{
+        const identity = await authClient.getIdentity();
+        console.log("~~~", identity.getPrincipal().toText())
+        document.getElementById("loginStatus").innerText = identity.getPrincipal().toText();
+        document.getElementById("loginBtn").style.display = "none";
+        document.getElementById("iiUrl").innerText = iiUrlTxt;
+
+        const agent = new HttpAgent({ identity });
+        const webapp = Actor.createActor(mcn_idl, {
+        agent,
+        canisterId: mcn_id,
+        });
+        mcn_canister = webapp;
+      // Call whoami which returns the principal (user id) of the current user.
+        //const principal = await webapp.whoami();
+        //console.log("~~~ login finish",webapp.show_canisters);
+    }
+  })
+```
+
+* idl手动创建http agent核心代码
+```bash
+import { idlFactory as mcn_idl,canisterId as mcn_id } from "../../declarations/mcn";
+```
+
+```bash
+const identity = await authClient.getIdentity();
+const agent = new HttpAgent({ identity });
+const webapp = Actor.createActor(mcn_idl, {
+agent,
+canisterId: mcn_id,
+});
+mcn_canister = webapp;
+```
+
 ###将install_code改为public方法，用于实现限权操作
 
 
