@@ -1,8 +1,12 @@
 import { mcn } from "../../declarations/mcn";
 import { AuthClient } from "@dfinity/auth-client";
 import { Actor, HttpAgent } from "@dfinity/agent";
+import { idlFactory as mcn_idl,canisterId as mcn_id } from "../../declarations/mcn";
 
 const webapp_id = process.env.WHOAMI_CANISTER_ID;
+
+let agent = new HttpAgent;
+let mcn_canister = null;
 
 // Autofills the <input> for the II Url to point to the correct canister.
 document.body.onload = () => {
@@ -19,20 +23,26 @@ document.body.onload = () => {
 };
 
 document.getElementById("show").addEventListener("click", async () => {
-    let message_pos = document.getElementById("message");
-    message_pos.replaceChildren([]);
-    console.log("mcnShowControllers=====")
-    const mcnShowControllers = await mcn.show_controllers();
-    console.log("mcnShowControllers-----", mcnShowControllers)
-    for(let i = 0 ; i < mcnShowControllers.length; i++){
-        let post = document.createElement('post');
-        post.innerText = mcnShowControllers[i];
-        let post2 = document.createElement('post2');
-        post2.innerText = '\n'
-        message_pos.appendChild(post);
-        message_pos.appendChild(post2);
-        // document.getElementById("message").innerText = mcnShowControllers;
-    }  
+    try {
+        let message_pos = document.getElementById("message");
+        message_pos.replaceChildren([]);
+        console.log("mcnShowControllers=====")
+        const mcnShowControllers = await mcn_canister.show_controllers();
+        console.log("mcnShowControllers-----", mcnShowControllers)
+        for(let i = 0 ; i < mcnShowControllers.length; i++){
+            let post = document.createElement('post');
+            post.innerText = mcnShowControllers[i];
+            let post2 = document.createElement('post2');
+            post2.innerText = '\n'
+            message_pos.appendChild(post);
+            message_pos.appendChild(post2);
+            // document.getElementById("message").innerText = mcnShowControllers;
+        }      
+    } catch (error) {
+       console.error(error);
+       alert(error) 
+    }
+    
 })
 
 document.getElementById("showDeployed").addEventListener("click", async () => {
@@ -53,16 +63,27 @@ document.getElementById("showDeployed").addEventListener("click", async () => {
 document.getElementById("loginBtn").addEventListener("click", async () => {
 
   const authClient = await AuthClient.create();
-  const iiUrl = document.getElementById("iiUrl").value;
-
+  //const iiUrl = document.getElementById("iiUrl").value;
+  const iiUrlTxt = document.getElementById("iiUrl").innerText;
+  console.log("~~~11", iiUrlTxt)
   authClient.login({
-    identityProvider: iiUrl,
+    identityProvider: null,
     onSuccess: async()=>{
         const identity = await authClient.getIdentity();
         console.log("~~~", identity.getPrincipal().toText())
         document.getElementById("loginStatus").innerText = identity.getPrincipal().toText();
         document.getElementById("loginBtn").style.display = "none";
-        document.getElementById("iiUrl").innerText = iiUrl;
+        document.getElementById("iiUrl").innerText = iiUrlTxt;
+
+        const agent = new HttpAgent({ identity });
+        const webapp = Actor.createActor(mcn_idl, {
+        agent,
+        canisterId: mcn_id,
+        });
+        mcn_canister = webapp;
+      // Call whoami which returns the principal (user id) of the current user.
+        //const principal = await webapp.whoami();
+        //console.log("~~~ login finish",webapp.show_canisters);
     }
   })
 
