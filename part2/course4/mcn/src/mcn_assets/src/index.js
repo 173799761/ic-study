@@ -16,7 +16,6 @@ document.body.onload = () => {
   }
   document.getElementById("iiUrl").innerText = iiUrl;
 
-
 };
 
 document.getElementById("show").addEventListener("click", async () => {
@@ -51,37 +50,63 @@ document.getElementById("showDeployed").addEventListener("click", async () => {
 })
 
 
-// document.getElementById("loginBtn").addEventListener("click", async () => {
-//   // When the user clicks, we start the login process.
-//   // First we have to create and AuthClient.
-//   const authClient = await AuthClient.create();
+document.getElementById("loginBtn").addEventListener("click", async () => {
 
-//   // Find out which URL should be used for login.
-//   const iiUrl = document.getElementById("iiUrl").value;
+  const authClient = await AuthClient.create();
+  const iiUrl = document.getElementById("iiUrl").value;
 
-//   // Call authClient.login(...) to login with Internet Identity. This will open a new tab
-//   // with the login prompt. The code has to wait for the login process to complete.
-//   // We can either use the callback functions directly or wrap in a promise.
-//   await new Promise((resolve, reject) => {
-//     authClient.login({
-//       identityProvider: iiUrl,
-//       onSuccess: resolve,
-//       onError: reject,
+  authClient.login({
+    identityProvider: iiUrl,
+    onSuccess: async()=>{
+        const identity = await authClient.getIdentity();
+        console.log("~~~", identity.getPrincipal().toText())
+        document.getElementById("loginStatus").innerText = identity.getPrincipal().toText();
+        document.getElementById("loginBtn").style.display = "none";
+        document.getElementById("iiUrl").innerText = iiUrl;
+    }
+  })
+
+    // await new Promise((resolve, reject) => {
+    //     authClient.login({
+    //         identityProvider: iiUrl,
+    //         onSuccess: resolve,
+    //         onError: reject,
+    //     });
+    // });
+
+  });
+
+
+
+
+//   document.getElementById("loginBtn").addEventListener("click", async () => {
+//     // When the user clicks, we start the login process.
+//     // First we have to create and AuthClient.
+//     const authClient = await AuthClient.create();
+//     // Find out which URL should be used for login.
+//     const iiUrl = document.getElementById("iiUrl").value;
+  
+//     // Call authClient.login(...) to login with Internet Identity. This will open a new tab
+//     // with the login prompt. The code has to wait for the login process to complete.
+//     // We can either use the callback functions directly or wrap in a promise.
+//     await new Promise((resolve, reject) => {
+//       authClient.login({
+//         identityProvider: iiUrl,
+//         onSuccess: resolve,
+//         onError: reject,
+//       });
 //     });
-//   });
-//     // At this point we're authenticated, and we can get the identity from the auth client:
-//     const identity = authClient.getIdentity();
-//     // Using the identity obtained from the auth client, we can create an agent to interact with the IC.
-//     const agent = new HttpAgent({ identity });
-//     // Using the interface description of our webapp, we create an actor that we use to call the service methods.
-//     const webapp = Actor.createActor(webapp_idl, {
-//       agent,
-//       canisterId: webapp_id,
+//       // At this point we're authenticated, and we can get the identity from the auth client:
+//       const identity = authClient.getIdentity();
+//       // Using the identity obtained from the auth client, we can create an agent to interact with the IC.
+//       const agent = new HttpAgent({ identity });
+//       // Using the interface description of our webapp, we create an actor that we use to call the service methods.
+//       // const webapp = Actor.createActor(webapp_idl, {
+//       //   agent,
+//       //   canisterId: webapp_id,
+//       // });
+//       // Call whoami which returns the principal (user id) of the current user.
+//       const principal = await webapp.whoami();
+//       // show the principal on the page
+//       document.getElementById("loginStatus").innerText = principal.toText();
 //     });
-//     // Call whoami which returns the principal (user id) of the current user.
-//     const principal = await webapp.whoami();
-//     // show the principal on the page
-//     document.getElementById("loginStatus").innerText = principal.toText();
-//   });
-
-
