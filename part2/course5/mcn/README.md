@@ -130,45 +130,6 @@ dfx deploy mcn --argument '(1, vec {principal "54dz2-4wkpu-xqyva-45om5-lciwq-kl6
 ```
 
 
-* 在调用IC Management Canister 进行create canister时候已经以发消息的方式进行了cycles的支付
-* 创建Canister
-```bash
-dfx canister call mcn create_canister '()';
-```
-* 查询Canister
-```bash
-dfx canister call mcn show_canisters '()'
-```
-* 查询小组成员 
-```bash
-dfx canister call mcn show_controllers '()'
-```
-
-* 获取指定Canister
-```bash
-dfx canister call mcn get_canister '(principal "sgymv-uiaaa-aaaaa-aaaia-cai")' 
-```
-* 查询当前principal余额
-```bash
-dfx identity get-wallet;      
-```
-
-* 创建提案 即`允许发起提案，比如对某个被多人钱包管理的 canister 限制权限`
-```bash
-dfx canister call mcn make_proposal '(variant{start},principal "sgymv-uiaaa-aaaaa-aaaia-cai",null)'
-```
-
-* 查询提案
-```bash
-dfx canister call mcn show_propose '()'
-```
-* 提案投票 即`统计小组成员对提案的投票（同意或否决），并根据投票结果执行决议`。
-```bash
-dfx canister call mcn vote_proposal '(1,true)'
-```
-
-## 客户端UI显示结果见pic 文件夹截图
-
 
 
 
